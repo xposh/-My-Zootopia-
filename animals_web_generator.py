@@ -6,20 +6,35 @@ def load_data(file_path):
     return json.load(handle)
 
 animals_data = load_data('animals_data.json')
+output = ""
 
 for animal in animals_data:
     # Name prüfen und ausgeben
     if "name" in animal:
-        print(f"Name: {animal['name']}")
+        output += f"Name: {animal['name']}\n"
 
     #Diet prüfen und Achtung! *(liegt innerhalb von 'characteristics')
     if "characteristics" in animal and "diet" in animal["characteristics"]:
-        print(f"Diet: {animal['characteristics']['diet']}") #<--- *
+        output += f"Diet: {animal['characteristics']['diet']}\n" #<--- *
 
     #Location prüfen *(erstes Element der Liste 'locations')
     if "locations" in animal and len(animal["locations"]) > 0:
-        print(f"Location: {animal['locations'][0]}") #* [0] = erstes Element
+        output += f"Location: {animal['locations'][0]}\n" #* [0] = erstes Element
 
     #Type prüfen (liegt auch in 'characteristics')
     if "characteristics" in animal and "type" in animal["characteristics"]:
-        print(f"Type: {animal['characteristics']['type']}")
+        output += f"Type: {animal['characteristics']['type']}\n"
+
+    output += "\n"
+
+
+
+print(output)
+
+with open("animals_template.html", "r") as f:
+    template_content = f.read()
+
+new_html_content = template_content.replace("__REPLACE_ANIMALS_INFO__", output)
+
+with open("animals.html", "w") as f:
+    f.write(new_html_content)
